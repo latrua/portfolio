@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>吴梦淇 · Portfolio</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+
+    :root {
+      --white: #ffffff;
+      --off-white: #fafafa;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-300: #d1d5db;
+      --gray-400: #9ca3af;
+      --gray-500: #6b7280;
+      --gray-600: #4b5563;
+      --gray-700: #374151;
+      --gray-800: #1f2937;
+      --gray-900: #111827;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--white);
+      color: var(--gray-800);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 24px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      z-index: 1000;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .nav-logo {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--gray-900);
+      letter-spacing: -0.02em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 48px;
+    }
+
+    .nav-links a {
+      font-size: 0.875rem;
+      color: var(--gray-500);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--gray-900);
+    }
+
+    /* Hero Section */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 48px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .hero-content {
+      max-width: 720px;
+    }
+
+    .hero-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--gray-400);
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 600;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      color: var(--gray-900);
+      margin-bottom: 32px;
+    }
+
+    .hero-desc {
+      font-size: 1.125rem;
+      color: var(--gray-500);
+      line-height: 1.8;
+      max-width: 560px;
+      font-weight: 300;
+    }
+
+    .hero-contacts {
+      display: flex;
+      gap: 32px;
+      margin-top: 48px;
+    }
+
+    .hero-contacts a {
+      font-size: 0.875rem;
+      color: var(--gray-600);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: color 0.2s;
+    }
+
+    .hero-contacts a:hover {
+      color: var(--gray-900);
+    }
+
+    /* Section */
+    .section {
+      padding: 120px 48px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      margin-bottom: 80px;
+    }
+
+    .section-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--gray-400);
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--gray-900);
+      letter-spacing: -0.02em;
+    }
+
+    /* Projects Grid */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+    }
+
+    .project-card {
+      background: var(--gray-50);
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--gray-100);
+      transition: all 0.4s ease;
+    }
+
+    .project-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.06),
+        0 0 0 1px rgba(0, 0, 0, 0.05);
+      border-color: var(--gray-200);
+    }
+
+    .project-image {
+      aspect-ratio: 16/10;
+      overflow: hidden;
+      background: linear-gradient(135deg, var(--gray-100), var(--gray-200));
+    }
+
+    .project-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+
+    .project-card:hover .project-image img {
+      transform: scale(1.05);
+    }
+
+    .project-content {
+      padding: 32px;
+    }
+
+    .project-number {
+      font-size: 0.75rem;
+      color: var(--gray-400);
+      margin-bottom: 12px;
+      font-weight: 500;
+    }
+
+    .project-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--gray-900);
+      margin-bottom: 12px;
+      letter-spacing: -0.01em;
+    }
+
+    .project-desc {
+      font-size: 0.9rem;
+      color: var(--gray-500);
+      line-height: 1.7;
+      margin-bottom: 20px;
+      font-weight: 300;
+    }
+
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .tag {
+      font-size: 0.7rem;
+      padding: 6px 12px;
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: 6px;
+      color: var(--gray-600);
+      font-weight: 400;
+    }
+
+    .project-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.875rem;
+      color: var(--gray-700);
+      text-decoration: none;
+      font-weight: 500;
+      padding: 10px 20px;
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    .project-link:hover {
+      background: var(--gray-900);
+      color: var(--white);
+      border-color: var(--gray-900);
+    }
+
+    /* Footer */
+    footer {
+      padding: 80px 48px;
+      border-top: 1px solid var(--gray-100);
+      text-align: center;
+    }
+
+    footer p {
+      font-size: 0.875rem;
+      color: var(--gray-400);
+    }
+
+    footer span {
+      color: var(--gray-600);
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .projects-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      nav {
+        padding: 20px 24px;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .hero {
+        padding: 0 24px;
+      }
+
+      .section {
+        padding: 80px 24px;
+      }
+
+      .hero-contacts {
+        flex-direction: column;
+        gap: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav>
+    <div class="nav-logo">吴梦淇</div>
+    <div class="nav-links">
+      <a href="#work">Work</a>
+      <a href="mailto:1621608477@qq.com">Contact</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-label">Product Designer · AI Prototyper</div>
+      <h1>喜欢通过 AI 能力<br>把 idea 转为可体验、可验证的产品原型</h1>
+      <p class="hero-desc">
+        这里收录平常的 demo 与产品设计作品，探索 AI 与交互的更多可能性。
+      </p>
+      <div class="hero-contacts">
+        <a href="mailto:1621608477@qq.com">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+            <polyline points="22,6 12,13 2,6"></polyline>
+          </svg>
+          1621608477@qq.com
+        </a>
+        <a href="https://github.com/latrua" target="_blank">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          GitHub
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Work Section -->
+  <section class="section" id="work">
+    <div class="section-header">
+      <div class="section-label">Selected Work</div>
+      <h2 class="section-title">项目作品</h2>
+    </div>
+
+    <div class="projects-grid">
+      <!-- Project 1 -->
+      <article class="project-card">
+        <div class="project-image">
+          <img src="task-system-preview.png" alt="智能任务编排系统">
+        </div>
+        <div class="project-content">
+          <div class="project-number">01</div>
+          <h3 class="project-title">智能任务编排系统</h3>
+          <p class="project-desc">基于多智能体架构的智能任务管理系统，动态适配用户精力与情绪状态进行任务规划。</p>
+          <div class="project-tags">
+            <span class="tag">Multi-Agent</span>
+            <span class="tag">E-D Match</span>
+            <span class="tag">认知负载</span>
+          </div>
+          <a href="task-system.html" target="_blank" class="project-link">
+            View Project →
+          </a>
+        </div>
+      </article>
+
+      <!-- Project 2 -->
+      <article class="project-card">
+        <div class="project-image">
+          <img src="memorytree-preview.png" alt="MemoryTree">
+        </div>
+        <div class="project-content">
+          <div class="project-number">02</div>
+          <h3 class="project-title">MemoryTree</h3>
+          <p class="project-desc">基于"回忆线索优先"的个人照片档案系统，支持事件图谱导航与跨事件反思。</p>
+          <div class="project-tags">
+            <span class="tag">HCI</span>
+            <span class="tag">照片档案</span>
+            <span class="tag">回忆引导</span>
+          </div>
+          <a href="../memorytree_project/event-graph-prototype.html" target="_blank" class="project-link">
+            View Project →
+          </a>
+        </div>
+      </article>
+
+      <!-- Project 3 -->
+      <article class="project-card">
+        <div class="project-image">
+          <img src="pbl-preview.png" alt="PBL 平台">
+        </div>
+        <div class="project-content">
+          <div class="project-number">03</div>
+          <h3 class="project-title">PBL 项目制学习平台</h3>
+          <p class="project-desc">面向研究生的 AI 辅助 PBL 教学平台，支持教学方案生成与个性化能力报告。</p>
+          <div class="project-tags">
+            <span class="tag">PBL</span>
+            <span class="tag">AI 评估</span>
+            <span class="tag">教育</span>
+          </div>
+          <a href="../pbl-platform/index.html" target="_blank" class="project-link">
+            View Project →
+          </a>
+        </div>
+      </article>
+
+      <!-- Project 4 -->
+      <article class="project-card">
+        <div class="project-image">
+          <img src="workflow-preview.png" alt="AI 工作流">
+        </div>
+        <div class="project-content">
+          <div class="project-number">04</div>
+          <h3 class="project-title">AI 用户洞察分析工作流</h3>
+          <p class="project-desc">基于 Coze 的多节点 AI 工作流，实现"情感分析→痛点归纳→策略生成"的完整分析链路。</p>
+          <div class="project-tags">
+            <span class="tag">Coze</span>
+            <span class="tag">Prompt</span>
+            <span class="tag">用户洞察</span>
+          </div>
+          <a href="#" class="project-link">
+            View Details →
+          </a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>Made with <span>vibe coding</span></p>
+  </footer>
+</body>
+</html>

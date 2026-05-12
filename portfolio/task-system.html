@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>智能任务编排系统</title>
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --bg: #f3f4f6;
+      --card-bg: #ffffff;
+      --text: #1f2937;
+      --text-secondary: #6b7280;
+      --border: #e5e7eb;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .logo {
+      font-size: 1.75rem;
+    }
+
+    .header-title h1 {
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+
+    .header-title p {
+      font-size: 0.8rem;
+      opacity: 0.9;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .user-name {
+      text-align: right;
+    }
+
+    .user-name .name {
+      font-weight: 500;
+    }
+
+    .user-name .role {
+      font-size: 0.75rem;
+      opacity: 0.8;
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+    }
+
+    /* Main Layout */
+    .main-container {
+      display: grid;
+      grid-template-columns: 280px 1fr 320px;
+      gap: 20px;
+      padding: 20px;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+
+    /* Card Style */
+    .card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Left Panel - Status */
+    .status-section {
+      margin-bottom: 20px;
+    }
+
+    .status-label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .energy-bar {
+      height: 8px;
+      background: var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .energy-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #10b981, #34d399);
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+
+    .energy-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--success);
+    }
+
+    /* Mood Selector */
+    .mood-options {
+      display: flex;
+      gap: 8px;
+    }
+
+    .mood-btn {
+      flex: 1;
+      padding: 12px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      background: white;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .mood-btn:hover, .mood-btn.active {
+      border-color: var(--primary);
+      background: #eef2ff;
+    }
+
+    .mood-btn .emoji {
+      font-size: 1.5rem;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .mood-btn .label {
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+    }
+
+    /* Input Fields */
+    .input-group {
+      margin-bottom: 16px;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.9rem;
+      transition: border-color 0.2s;
+    }
+
+    .input-field:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .input-hint {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-top: 6px;
+    }
+
+    /* Buttons */
+    .btn {
+      padding: 12px 20px;
+      border-radius: 10px;
+      border: none;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-secondary {
+      background: white;
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg);
+    }
+
+    /* Center Panel - Task List */
+    .task-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .task-header h3 {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .task-subtitle {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    .task-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .task-item {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .task-item:hover {
+      border-color: var(--primary);
+      box-shadow: 0 2px 8px rgba(99, 102, 241, 0.1);
+    }
+
+    .task-item::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: var(--primary);
+      border-radius: 12px 0 0 12px;
+    }
+
+    .task-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+
+    .task-title {
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+
+    .task-score {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .task-meta {
+      display: flex;
+      gap: 16px;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+    }
+
+    .task-meta span {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .difficulty {
+      display: flex;
+      gap: 2px;
+    }
+
+    .difficulty-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--border);
+    }
+
+    .difficulty-dot.active {
+      background: var(--warning);
+    }
+
+    .task-reasoning {
+      background: #f9fafb;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .task-reasoning strong {
+      color: var(--primary);
+    }
+
+    /* Right Panel - Agent Log */
+    .agent-log {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .agent-item {
+      display: flex;
+      gap: 12px;
+      padding: 12px;
+      background: #f9fafb;
+      border-radius: 10px;
+    }
+
+    .agent-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .agent-icon.profiler { background: #dbeafe; }
+    .agent-icon.decomposer { background: #fce7f3; }
+    .agent-icon.strategist { background: #d1fae5; }
+    .agent-icon.critic { background: #fef3c7; }
+
+    .agent-info {
+      flex: 1;
+    }
+
+    .agent-name {
+      font-weight: 600;
+      font-size: 0.85rem;
+      margin-bottom: 4px;
+    }
+
+    .agent-action {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+
+    .agent-time {
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    /* Stats Row */
+    .stats-row {
+      display: flex;
+      gap: 16px;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .stat-box {
+      flex: 1;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    /* Energy Chart Preview */
+    .chart-preview {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .chart-title {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+    }
+
+    .chart-bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 4px;
+      height: 60px;
+    }
+
+    .chart-bar {
+      flex: 1;
+      background: linear-gradient(to top, #667eea, #764ba2);
+      border-radius: 2px 2px 0 0;
+      opacity: 0.7;
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      max-width: 500px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .modal-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text-secondary);
+    }
+
+    .subtask-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .subtask-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: #f9fafb;
+      border-radius: 8px;
+    }
+
+    .subtask-check {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--border);
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    .subtask-check.done {
+      background: var(--success);
+      border-color: var(--success);
+    }
+
+    /* Responsive */
+    @media (max-width: 1200px) {
+      .main-container {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-left">
+      <div class="logo">🧠</div>
+      <div class="header-title">
+        <h1>智能任务编排系统</h1>
+        <p>Multi-Agent Adaptive Task Orchestration System</p>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="user-name">
+        <div class="name">张三</div>
+        <div class="role">研究生</div>
+      </div>
+      <div class="avatar">ZS</div>
+    </div>
+  </header>
+
+  <div class="main-container">
+    <!-- Left Panel: Status -->
+    <div class="left-panel">
+      <div class="card">
+        <h3 class="card-title">📊 当前状态监测</h3>
+        
+        <div class="status-section">
+          <div class="status-label">精力水平 (Energy Level)</div>
+          <div class="energy-bar">
+            <div class="energy-fill" style="width: 70%"></div>
+          </div>
+          <div class="energy-value">7 / 10</div>
+        </div>
+
+        <div class="status-section">
+          <div class="status-label">情绪状态 (Mood)</div>
+          <div class="mood-options">
+            <button class="mood-btn active">
+              <span class="emoji">😊</span>
+              <span class="label">平静</span>
+            </button>
+            <button class="mood-btn">
+              <span class="emoji">😔</span>
+              <span class="label">低落</span>
+            </button>
+            <button class="mood-btn">
+              <span class="emoji">😄</span>
+              <span class="label">兴奋</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="status-section">
+          <div class="status-label">可用时间 (Available Time)</div>
+          <input type="text" class="input-field" value="180" placeholder="分钟">
+        </div>
+
+        <div class="status-section">
+          <div class="status-label">环境 (Environment)</div>
+          <select class="input-field">
+            <option>🔇 安静</option>
+            <option>🌿 自然声</option>
+            <option>🎵 轻音乐</option>
+          </select>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat-box">
+            <div class="stat-value">12</div>
+            <div class="stat-label">今日完成</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value">85%</div>
+            <div class="stat-label">本周效率</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Center Panel: Task Input & List -->
+    <div class="center-panel">
+      <div class="card" style="margin-bottom: 20px;">
+        <h3 class="card-title">✍️ 添加新任务</h3>
+        <div class="input-group">
+          <textarea class="input-field" rows="3" placeholder="用自然语言描述你的任务..."></textarea>
+          <div class="input-hint">例如：完成毕业论文的文献综述部分</div>
+        </div>
+        <div style="display: flex; gap: 12px;">
+          <button class="btn btn-primary" onclick="addTask()">
+            🧠 智能规划
+          </button>
+          <button class="btn btn-secondary">
+            📝 手动添加
+          </button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="task-header">
+          <div>
+            <h3>🎯 今日推荐任务序列</h3>
+            <div class="task-subtitle">基于多智能体协同决策</div>
+          </div>
+        </div>
+
+        <div class="task-list">
+          <div class="task-item" onclick="showSubtasks()">
+            <div class="task-header-row">
+              <div class="task-title">1. 回复导师邮件 - 关于开题报告修改意见</div>
+              <div class="task-score">95分</div>
+            </div>
+            <div class="task-meta">
+              <span>⏱ 15分钟</span>
+              <span>🔥 难度: <span class="difficulty">
+                <span class="difficulty-dot active"></span>
+                <span class="difficulty-dot"></span>
+                <span class="difficulty-dot"></span>
+                <span class="difficulty-dot"></span>
+                <span class="difficulty-dot"></span>
+              </span></span>
+              <span>📅 今天 18:00</span>
+            </div>
+            <div class="task-reasoning">
+              <strong>Strategist:</strong> 当前精力7/10，适合处理简单任务作为热身。此任务难度低(1/10)，能快速获得成就感，缓解焦虑情绪。
+            </div>
+          </div>
+
+          <div class="task-item">
+            <div class="task-header-row">
+              <div class="task-title">2. 整理参考文献 - 建立Zotero文献库</div>
+              <div class="task-score">88分</div>
+            </div>
+            <div class="task-meta">
+              <span>⏱ 45分钟</span>
+              <span>🔥 难度: <span class="difficulty">
+                <span class="difficulty-dot active"></span>
+                <span class="difficulty-dot active"></span>
+                <span class="difficulty-dot active"></span>
+                <span class="difficulty-dot"></span>
+                <span class="difficulty-dot"></span>
+              </span></span>
+              <span>📅 今天 20:00</span>
+            </div>
+            <div class="task-reasoning">
+              <strong>Strategist:</strong> 精力下降期适合处理整理类任务。此任务对认知负荷要求适中，且完成后为后续写作打下基础。
+            </div>
+          </div>
+
+          <div class="task-item">
+            <div class="task-header-row">
+              <div class="task-title">3. 阅读论文 - Transformer架构综述</div>
+              <div class="task-score">82分</div>
+            </div>
+            <div class="task-meta">
+              <span>⏱ 60分钟</span>
+              <span>🔥 难度: <span class="difficulty">
+                <span class="difficulty-dot active"></span>
+                <span class="difficulty-dot active"></span>
+                <span class="difficulty-dot active"></span>
+                <span class="difficulty-dot active"></span>
+                <span class="difficulty-dot"></span>
+              </span></span>
+              <span>📅 明天 09:00</span>
+            </div>
+            <div class="task-reasoning">
+              <strong>Strategist:</strong> 建议安排在明日精力高峰期。深度阅读需要高度专注，与当前可用时间不匹配。
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Panel: Agent Log -->
+    <div class="right-panel">
+      <div class="card">
+        <h3 class="card-title">🤖 Agent活动日志</h3>
+        
+        <div class="agent-log">
+          <div class="agent-item">
+            <div class="agent-icon profiler">👤</div>
+            <div class="agent-info">
+              <div class="agent-name">Profiler Agent</div>
+              <div class="agent-action">检测到您下午3-5点效率通常较低，已调整任务优先级</div>
+              <div class="agent-time">2分钟前</div>
+            </div>
+          </div>
+
+          <div class="agent-item">
+            <div class="agent-icon decomposer">⚡</div>
+            <div class="agent-info">
+              <div class="agent-name">Decomposer Agent</div>
+              <div class="agent-action">已将"完成毕业论文"拆解为6个子任务，预计总时长8.5小时</div>
+              <div class="agent-time">5分钟前</div>
+            </div>
+          </div>
+
+          <div class="agent-item">
+            <div class="agent-icon strategist">🎯</div>
+            <div class="agent-info">
+              <div class="agent-name">Strategist Agent</div>
+              <div class="agent-action">基于能量匹配算法(E-D Match)，推荐4个任务，总分88.5分</div>
+              <div class="agent-time">刚刚</div>
+            </div>
+          </div>
+
+          <div class="agent-item">
+            <div class="agent-icon critic">🔍</div>
+            <div class="agent-info">
+              <div class="agent-name">Critic Agent</div>
+              <div class="agent-action">发现认知过载风险，建议延后1个高难度任务至明天</div>
+              <div class="agent-time">刚刚</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="chart-preview">
+          <div class="chart-title">📈 今日精力曲线预测</div>
+          <div class="chart-bars">
+            <div class="chart-bar" style="height: 40%"></div>
+            <div class="chart-bar" style="height: 60%"></div>
+            <div class="chart-bar" style="height: 80%"></div>
+            <div class="chart-bar" style="height: 100%"></div>
+            <div class="chart-bar" style="height: 70%"></div>
+            <div class="chart-bar" style="height: 50%"></div>
+            <div class="chart-bar" style="height: 30%"></div>
+            <div class="chart-bar" style="height: 20%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for Subtasks -->
+  <div class="modal-overlay" id="subtaskModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">📋 子任务分解</h3>
+        <button class="close-btn" onclick="closeModal()">×</button>
+      </div>
+      <div class="subtask-list">
+        <div class="subtask-item">
+          <div class="subtask-check done"></div>
+          <span>阅读导师邮件内容</span>
+        </div>
+        <div class="subtask-item">
+          <div class="subtask-check"></div>
+          <span>整理修改意见要点</span>
+        </div>
+        <div class="subtask-item">
+          <div class="subtask-check"></div>
+          <span>撰写回复草稿</span>
+        </div>
+        <div class="subtask-item">
+          <div class="subtask-check"></div>
+          <span>检查格式与附件</span>
+        </div>
+        <div class="subtask-item">
+          <div class="subtask-check"></div>
+          <span>发送邮件</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Mood selection
+    document.querySelectorAll('.mood-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+
+    // Show subtasks modal
+    function showSubtasks() {
+      document.getElementById('subtaskModal').classList.add('open');
+    }
+
+    function closeModal() {
+      document.getElementById('subtaskModal').classList.remove('open');
+    }
+
+    // Add task (demo)
+    function addTask() {
+      alert('🧠 Decomposer Agent 正在分析任务...\n\n已拆解为3个子任务！');
+    }
+
+    // Close modal on overlay click
+    document.getElementById('subtaskModal').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) closeModal();
+    });
+  </script>
+</body>
+</html>
